@@ -1,6 +1,7 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Main {
 
@@ -10,7 +11,7 @@ public class Main {
 
 
 
-
+//doit um aus statischem rauszukommen
     void doit(){
 
 
@@ -20,6 +21,12 @@ public class Main {
 
     void getDatabaseConn() throws SQLException {
         Connection connection = DriverManager.
-                getConnection("jdbc:mariadb://localhost:3306/DB?user=" + Constants.username + "&password=" + Constants.password);
+                getConnection("jdbc:mariadb://localhost:3306/DB?user="
+                        + Constants.username + "&password=" + Constants.password);
+
+        Statement stmt = connection.createStatement();
+        stmt.executeUpdate("SELECT * FROM...");
+        stmt.close();
+        connection.close();
     }
 }
