@@ -1,7 +1,9 @@
 import java.sql.*;
 
 public class Main {
-    DatabaseHander dbHandler = new DatabaseHander();
+    DatabaseHander dbHandler = new DatabaseHander(); //TODO Datenbankthemen in die Klasse auslagern.
+                                                    // nur wegen Tests in main
+
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         new Main().doit();
     }
@@ -14,8 +16,10 @@ public class Main {
 //        System.out.println("START, printing string of sql");
 //        System.out.println(String.valueOf(getClass().getClassLoader().getResource("C:\\Users\\it_hoppenz\\IdeaProjects\\3FA071_Gruppe_6\\src\\main" +
 //                "\\resources\\databasemigrations\\V1__customer-schema.txt")));
-        System.out.println(getClass().getClassLoader().getResource("")
-        );
+       // System.out.println
+        //das ist der pfad zu den sql create dateien
+                //(getClass().getClassLoader().getResource("\\databasemigrations\\V1_kunden-schema.txt"));
+        //
         getDatabaseConn();
 
 
