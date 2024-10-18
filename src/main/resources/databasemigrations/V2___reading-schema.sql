@@ -7,5 +7,5 @@ CREATE TABLE reading (
     Einheit VARCHAR(10),                  -- Einheit (kWh, MWh, m³)
     Typ VARCHAR(20),                      -- Typ (Heizung, Strom, Wasser)
     Kommentar VARCHAR(255),               -- Optionaler Kommentar
-    FOREIGN KEY (Kunde) REFERENCES customer(UUID) ON DELETE CASCADE
+    FOREIGN KEY (Kunde) REFERENCES kundne(UUID) ON DELETE CASCADE
 );
