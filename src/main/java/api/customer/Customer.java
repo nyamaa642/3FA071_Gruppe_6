@@ -1,49 +1,53 @@
 package api.customer;
 
-public class Customer {
-    private int id;
-    private String name;
-    private String address;
-    private String email;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.UUID;
 
-    public Customer(int id, String name, String address, String email) {
+public class Customer {
+
+    private UUID id;
+    private String lastName;
+    private String firstName;
+    private LocalDate birthDate;
+
+    public Customer(UUID id, String lastName, String firstName, LocalDate birthDate) {
         this.id = id;
-        this.name = name;
-        this.address = address;
-        this.email = email;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.birthDate = birthDate;
     }
 
-    // Getters and Setters
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
-    public String getAddress() {
-        return address;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getEmail() {
-        return email;
+    public LocalDate getBirthDate() {
+        return birthDate;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
     }
 }
 
