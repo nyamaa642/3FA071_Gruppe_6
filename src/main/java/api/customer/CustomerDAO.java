@@ -1,14 +1,19 @@
 package api.customer;
 
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static java.sql.DriverManager.getConnection;
-
 public class CustomerDAO {
+
+    Connection getConnection() throws SQLException {
+        String url = "jdbc:mariadb://127.0.0.1:3306/";
+        String username = "root";
+        String password = "12345";
+        return DriverManager.getConnection(url, username, password);
+    }
+
 
     // Create Customer
     public void addCustomer(Customer customer) throws SQLException {

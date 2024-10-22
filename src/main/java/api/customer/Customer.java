@@ -18,6 +18,10 @@ public class Customer {
         this.birthDate = birthDate;
     }
 
+    public Customer() {
+
+    }
+
     public UUID getId() {
         return id;
     }
