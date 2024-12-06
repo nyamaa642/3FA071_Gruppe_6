@@ -1,75 +1,72 @@
 package api.customer;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.sql.*;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomerDAOTest {
 
     private CustomerDAO customerDAO;
 
-    @Before
+    @BeforeEach
     public void setUp() throws SQLException {
         customerDAO = new CustomerDAO();
-
-        // Set up the test database schema
-        try (Connection connection = customerDAO.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS customers (" +
-                    "id CHAR(36) PRIMARY KEY, " +
-                    "firstname VARCHAR(50), " +
-                    "lastname VARCHAR(50), " +
-                    "birthDate DATE)");
-        }
-    }
-
-    @After
-    public void tearDown() throws SQLException {
-        // Clean up the test database after each test
-        try (Connection connection = customerDAO.getConnection();
-             Statement statement = connection.createStatement()) {
-            statement.execute("DROP TABLE customers");
-        }
     }
 
     @Test
     public void testAddCustomer() throws SQLException {
-        Customer customer = new Customer(UUID.randomUUID(), "John", "Doe", java.time.LocalDate.of(1990, 1, 1));
+        UUID id = UUID.randomUUID();
+        Customer customer = new Customer(id, "John", "Doe", LocalDate.of(1980, 1, 1));
         customerDAO.addCustomer(customer);
 
-        // Verify that the customer was added
-        Customer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
-        assertNotNull(retrievedCustomer);
-        assertEquals("John", retrievedCustomer.getFirstName());
-        assertEquals("Doe", retrievedCustomer.getLastName());
-        assertEquals(java.time.LocalDate.of(1990, 1, 1), retrievedCustomer.getBirthDate());
+        Customer retrievedCustomer = customerDAO.getCustomerById(id);
+
+        assertEquals(customer.getId(), retrievedCustomer.getId());
+        assertEquals(customer.getFirstName(), retrievedCustomer.getFirstName());
+        assertEquals(customer.getLastName(), retrievedCustomer.getLastName());
+        assertEquals(customer.getBirthDate(), retrievedCustomer.getBirthDate());
     }
 
     @Test
-    public void testGetCustomerById() throws SQLException {
-        // Insert a customer directly to the DB for testing
-        UUID id = UUID.randomUUID();
-        try (Connection connection = customerDAO.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     "INSERT INTO customers (id, firstname, lastname, birthDate) VALUES (?, ?, ?, ?)")) {
-            statement.setString(1, id.toString());
-            statement.setString(2, "Jane");
-            statement.setString(3, "Doe");
-            statement.setDate(4, Date.valueOf("1992-02-02"));
-            statement.executeUpdate();
-        }
+    public void testGetAllCustomers() throws SQLException {
+        Customer customer1 = new Customer(UUID.randomUUID(), "John", "Doe", LocalDate.of(1980, 1, 1));
+        Customer customer2 = new Customer(UUID.randomUUID(), "Jane", "Smith", LocalDate.of(1990, 2, 2));
+        Customer customer3 = new Customer(UUID.randomUUID(), "Mike", "Johnson", LocalDate.of(1970, 3, 3));
 
-        // Retrieve the customer and check values
-        Customer customer = customerDAO.getCustomerById(id);
-        assertNotNull(customer);
-        assertEquals("Jane", customer.getFirstName());
-        assertEquals("Doe", customer.getLastName());
-        assertEquals(java.time.LocalDate.of(1992, 2, 2), customer.getBirthDate());
+        customerDAO.addCustomer(customer1);
+        customerDAO.addCustomer(customer2);
+        customerDAO.addCustomer(customer3);
+        List<Customer> retrievedCustomers = customerDAO.getAllCustomers();
+
+        assertEquals(3, retrievedCustomers.size());
+        assertTrue(retrievedCustomers.contains(customer1));
+        assertTrue(retrievedCustomers.contains(customer2));
+        assertTrue(retrievedCustomers.contains(customer3));
+    }
+
+    @Test
+    public void testUpdateCustomer() throws SQLException {
+        Customer customer = new Customer(UUID.randomUUID(), "John", "Doe", LocalDate.of(1980, 1, 1));
+        customerDAO.addCustomer(customer);
+        customer.setFirstName("Jane");
+        customerDAO.updateCustomer(customer);
+        Customer updatedCustomer = customerDAO.getCustomerById(customer.getId());
+        assertEquals("Jane", updatedCustomer.getFirstName());
+    }
+
+    @Test
+    public void testDeleteCustomer() throws SQLException {
+        Customer customer = new Customer(UUID.randomUUID(), "John", "Doe", LocalDate.of(1980, 1, 1));
+        customerDAO.addCustomer(customer);
+        customerDAO.deleteCustomer(customer.getId());
+        Customer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
+        assertNull(retrievedCustomer);
     }
 
 }
