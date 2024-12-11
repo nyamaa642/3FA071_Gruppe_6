@@ -1,3 +1,5 @@
+package api.database;
+
 public class Constants
 {
     static String databaseName = "test";

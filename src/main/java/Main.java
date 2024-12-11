@@ -1,14 +1,13 @@
+import api.database.Constants;
+import api.database.DatabaseConnection;
+import api.database.IDatabaseConnection;
 import com.mysql.cj.x.protobuf.MysqlxDatatypes;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 public class Main {
-    //DatabaseHander dbHandler = new DatabaseHander(); //TODO Datenbankthemen in die Klasse auslagern.
+    //api.database.DatabaseHander dbHandler = new api.database.DatabaseHander(); //TODO Datenbankthemen in die Klasse auslagern.
                                                     // nur wegen Tests in main
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {

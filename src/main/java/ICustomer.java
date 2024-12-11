@@ -14,7 +14,7 @@ import java.time.LocalDate;
 //
 //    }
 //
-//    void setGender(Gender gender){
+//    void setGender(api.customer.Gender gender){
 //
 //    }
 //    //usw..

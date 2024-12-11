@@ -1,5 +1,7 @@
 package api.reading;
 
+import api.database.DatabaseConnection;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,9 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.hausfix.utils.DatabaseConnection.getConnection;
+import static java.sql.DriverManager.getConnection;
 
 public class ReadingDAO {
+
+    DatabaseConnection connection = new DatabaseConnection();
 
     // Create Reading
     public void addReading(Reading reading) throws SQLException {
