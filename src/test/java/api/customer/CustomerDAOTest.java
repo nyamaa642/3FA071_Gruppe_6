@@ -21,8 +21,8 @@ public class CustomerDAOTest {
 
     @Test
     public void testAddCustomer() throws SQLException {
-        UUID id = UUID.randomUUID();
-        Customer customer = new Customer(id, "John", "Doe", LocalDate.of(1980, 1, 1));
+        UUID id;
+        Customer customer = new Customer(id = UUID.randomUUID(), "John", "Doe", LocalDate.of(1980, 1, 1));
         customerDAO.addCustomer(customer);
 
         Customer retrievedCustomer = customerDAO.getCustomerById(id);

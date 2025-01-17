@@ -6,10 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.UUID;
 
 @WebServlet("/readings")
@@ -22,77 +20,76 @@ public class ReadingServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idParam = request.getParameter("id");
+
         try {
-            if (id != null) {
-                Reading reading = readingDAO.getReadingById(UUID.fromString(id));
-                ObjectMapper objectMapper = new ObjectMapper();
-                String json = objectMapper.writeValueAsString(reading);
-                resp.setContentType("application/json");
-                resp.getWriter().write(json);
+            if (idParam == null) {
+                response.setContentType("application/json");
+                response.getWriter().write(readingDAO.getAllReadings().toString());
             } else {
-                List<Reading> readings = readingDAO.getAllReadings();
-                ObjectMapper objectMapper = new ObjectMapper();
-                String json = objectMapper.writeValueAsString(readings);
-                resp.setContentType("application/json");
-                resp.getWriter().write(json);
+                UUID id = UUID.fromString(idParam);
+                Reading reading = readingDAO.getReadingById(UUID.fromString(idParam));
+                if (reading != null) {
+                    response.setContentType("application/json");
+                    response.getWriter().write(reading.toString());
+                } else {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Reading not found");
+                }
             }
         } catch (SQLException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            log("Database access error", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
+        }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String customerId = request.getParameter("customer_id");
+        String type = request.getParameter("type");
+        String reading = request.getParameter("reading");
+
+        if (customerId == null || type == null || reading == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+            return;
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String idParam = request.getParameter("id");
+        String customerId = request.getParameter("customer_id");
+        String type = request.getParameter("type");
+        String reading = request.getParameter("reading");
+
+        if (idParam == null || customerId == null || type == null || reading == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing parameters");
+            return;
+        }
+
         try {
-            BufferedReader reader = req.getReader();
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
+            UUID id = UUID.fromString(idParam);
+            Reading updatedReading = new Reading();
+            if (readingDAO.updateReading(updatedReading)) {
+                response.getWriter().write("Reading updated successfully");
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Reading not found");
             }
-            String json = sb.toString();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            Reading reading = objectMapper.readValue(json, Reading.class);
-            readingDAO.addReading(reading);
-
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-        } catch (SQLException | IOException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing request");
+        }
+        catch (SQLException e) {
+            log("Database access error", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
         }
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            BufferedReader reader = req.getReader();
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-            String json = sb.toString();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            Reading reading = objectMapper.readValue(json, Reading.class);
-
-            readingDAO.updateReading(reading);
-
-            resp.setStatus(HttpServletResponse.SC_OK);
-        } catch (SQLException | IOException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing request");
-        }
-    }
-
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getParameter("id");
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String id = request.getParameter("id");
         try {
             readingDAO.deleteReading(UUID.fromString(id));
         } catch (SQLException e) {
-            //TODO Handle the exception, e.g., send an error response
-        }
+            log("Database access error", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");        }
     }
 }
