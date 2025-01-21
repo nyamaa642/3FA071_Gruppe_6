@@ -10,4 +10,4 @@ services:
       MARIADB_PASSWORD: 12345
       MARIADB_ROOT_PASSWORD: 12345
     ports:
-      - "3307:3306"
+      - "3306:3306"

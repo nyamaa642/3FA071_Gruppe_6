@@ -1,16 +1,18 @@
 package api.reading;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.hausfix.utils.DatabaseConnection.getConnection;
-
 public class ReadingDAO {
+
+    Connection getConnection() throws SQLException {
+        String url = "jdbc:mariadb://127.0.0.1:3306/";
+        String username = "root";
+        String password = "12345";
+        return DriverManager.getConnection(url, username, password);
+    }
 
     // Create Reading
     public void addReading(Reading reading) throws SQLException {
@@ -36,7 +38,7 @@ public class ReadingDAO {
             while (resultSet.next()) {
                 Reading reading = new Reading();
                 reading.setId(UUID.fromString(resultSet.getString("id")));
-                reading.setCustomerID(UUID.fromString(resultSet.getString("customer_id")));
+                reading.setId(UUID.fromString(resultSet.getString("customer_id")));
                 reading.setType(TypeOfMeter.valueOf(resultSet.getString("typeOfMeter")));
                 reading.setReading(resultSet.getDouble("reading"));
                 readings.add(reading);
@@ -55,7 +57,7 @@ public class ReadingDAO {
 
             if (resultSet.next()) {
                 reading.setId(UUID.fromString(resultSet.getString("id")));
-                reading.setCustomerID(UUID.fromString(resultSet.getString("customer_id")));
+                reading.setId(UUID.fromString(resultSet.getString("customer_id")));
                 reading.setType(TypeOfMeter.valueOf(resultSet.getString("typeOfMeter")));
                 reading.setReading(resultSet.getDouble("reading"));
             }
@@ -64,7 +66,7 @@ public class ReadingDAO {
     }
 
     // Update Reading
-    public void updateReading(Reading reading) throws SQLException {
+    public boolean updateReading(Reading reading) throws SQLException {
         String sql = "UPDATE readings SET customer_id = ?, meter_type = ?, reading_value = ?, reading_timestamp = ? WHERE id = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -74,11 +76,12 @@ public class ReadingDAO {
             statement.setString(5, reading.getId().toString());
             statement.executeUpdate();
         }
+        return false;
     }
 
     // Delete Reading
     public void deleteReading(UUID id) throws SQLException {
-        String sql = "DELETE FROM house_readings WHERE id = ?";
+        String sql = "DELETE FROM readings WHERE id = ?";
         try (Connection connection = getConnection()) {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, id.toString());

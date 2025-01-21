@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.Properties;
 import java.util.stream.Collectors;
-import de.BSINFO3FA071G6.constants.Constants;
 
 public class DatabaseConnection implements IDatabaseConnection {
 
@@ -38,7 +37,7 @@ public class DatabaseConnection implements IDatabaseConnection {
             System.out.println("Datenbank exisitert bereits, wird neu aufgesetzt...");
             stmt.executeUpdate("DROP DATABASE " + dbName);
         }
-        //stmt.executeUpdate("DROP DATABASE " + de.BSINFO3FA071G6.constants.Constants.databaseName);
+        //stmt.executeUpdate("DROP DATABASE " + api.database.Constants.databaseName);
         System.out.println("Datenbank " + Constants.databaseName + " erstellen...");
         stmt.executeUpdate("CREATE DATABASE " + Constants.databaseName);
         stmt.executeUpdate("USE test");
