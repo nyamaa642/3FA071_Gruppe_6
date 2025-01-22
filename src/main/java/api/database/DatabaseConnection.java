@@ -11,7 +11,8 @@ public class DatabaseConnection implements IDatabaseConnection {
 
 
     private Connection connection;
-
+//TODO Nicht mehrere DB connections aufbauen, bei einer bleiben
+    //Singleton pattern
     @Override
     public IDatabaseConnection openConnection(Properties properties) throws SQLException, ClassNotFoundException {
         Class.forName("org.mariadb.jdbc.Driver");
@@ -19,7 +20,7 @@ public class DatabaseConnection implements IDatabaseConnection {
         String username = properties.getProperty("db.username");
         String password = properties.getProperty("db.password");
 
-        this.connection = DriverManager.getConnection(url, username, password);
+        this.connection = DriverManager.getConnection(url, "root", "12345");
         return this;
 
     }
@@ -40,12 +41,12 @@ public class DatabaseConnection implements IDatabaseConnection {
         //stmt.executeUpdate("DROP DATABASE " + api.database.Constants.databaseName);
         System.out.println("Datenbank " + Constants.databaseName + " erstellen...");
         stmt.executeUpdate("CREATE DATABASE " + Constants.databaseName);
-        stmt.executeUpdate("USE test");
+        stmt.executeUpdate("USE " + Constants.databaseName);
 
 
 
-        String sqlV1 = readSQLFromFile("/databasemigrations/V1__kunden-schema.txt");
-        String sqlV2 = readSQLFromFile("/databasemigrations/V2__reading-schema.txt");
+        String sqlV1 = readSQLFromFile("/databasemigrations/V1__kunden-schema.sql");
+        String sqlV2 = readSQLFromFile("/databasemigrations/V2__reading-schema.sql");
 
         System.out.println("Tabellen erstellen...");//\n " + sqlV1 + " & \n" +sqlV2);
 

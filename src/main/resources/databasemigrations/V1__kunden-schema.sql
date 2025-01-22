@@ -1,7 +1,7 @@
-CREATE TABLE customer (
-    id uuid NOT NULL,
-    firstname character varying(100) NOT NULL,
-    lastname character varying(100) NOT NULL,
-    birthDate date NOT NULL,
-    primary key(id)
-)
+CREATE TABLE Customer (
+    id UUID PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    birth_date DATE NOT NULL,
+    gender ENUM('D', 'M', 'U', 'W') NOT NULL
+);

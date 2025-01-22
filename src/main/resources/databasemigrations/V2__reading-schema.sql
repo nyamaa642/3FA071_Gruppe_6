@@ -1,11 +1,11 @@
-CREATE TABLE reading (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Kunde CHAR(36) NOT NULL,              -- Verknüpfung zu 'customer'
-    Zaehlernummer VARCHAR(50),            -- Zählernummer (einheitlich)
-    Datum DATE NOT NULL,                  -- Datum der Ablesung
-    Zaehlerstand DECIMAL(10, 3),          -- Ablesewert (kWh, MWh, m3)
-    Einheit VARCHAR(10),                  -- Einheit (kWh, MWh, m³)
-    KindOfMeter VARCHAR(20),              -- KindofMeter (Heizung, Strom, Wasser)
-    Kommentar VARCHAR(255),               -- Optionaler Kommentar
-    FOREIGN KEY (Kunde) REFERENCES customer(UUID) ON DELETE CASCADE
+CREATE TABLE Reading (
+    id UUID PRIMARY KEY,
+    comment TEXT,
+    customer_id UUID,
+    date_of_reading DATE NOT NULL,
+    kind_of_meter ENUM('HEIZUNG', 'STROM', 'WASSER', 'UNBEKANNT') NOT NULL,
+    meter_count DOUBLE NOT NULL,
+    meter_id VARCHAR(255) NOT NULL,
+    substitute BOOLEAN NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES Customer(id) ON DELETE SET NULL
 );
