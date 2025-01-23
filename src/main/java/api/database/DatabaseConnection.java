@@ -42,9 +42,10 @@ public class DatabaseConnection implements IDatabaseConnection {
         // db name geben
         String dbName = Constants.databaseName;
 
+
         // prüfe, ob die db bereits existiert
         if (databaseExists(dbName)) {
-            System.out.println("Datenbank existiert bereits, wird neu aufgesetzt...");
+            System.out.println("Produktiv Datenbank existiert bereits, wird neu aufgesetzt...");
             stmt.executeUpdate("DROP DATABASE " + dbName);
         }
 
@@ -88,7 +89,7 @@ public class DatabaseConnection implements IDatabaseConnection {
                 .collect(Collectors.joining("\n"));
     }
 
-    private boolean databaseExists(String dbName) throws SQLException {
+    boolean databaseExists(String dbName) throws SQLException {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SHOW DATABASES LIKE '" + dbName + "'");
         boolean exists = rs.next();

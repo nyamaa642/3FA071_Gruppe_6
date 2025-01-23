@@ -1,5 +1,6 @@
 package api.database;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -9,4 +10,6 @@ public interface IDatabaseConnection {
     void truncateAllTables() throws SQLException;
     void removeAllTables() throws SQLException;
     void closeConnection() throws SQLException;
+
+    Connection getConnection();
 }
