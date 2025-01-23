@@ -9,65 +9,72 @@ import java.util.stream.Collectors;
 
 public class DatabaseConnection implements IDatabaseConnection {
 
-
+    private static DatabaseConnection instance;
     private Connection connection;
-//TODO Nicht mehrere DB connections aufbauen, bei einer bleiben
-    //Singleton pattern
-    @Override
-    public IDatabaseConnection openConnection(Properties properties) throws SQLException, ClassNotFoundException {
-        Class.forName("org.mariadb.jdbc.Driver");
-        String url = properties.getProperty("db.url");
-        String username = properties.getProperty("db.username");
-        String password = properties.getProperty("db.password");
 
-        this.connection = DriverManager.getConnection(url, "root", "12345");
-        return this;
+    public DatabaseConnection() {}
 
+    //nutze nur eine instanz
+    public static synchronized DatabaseConnection getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnection();
+        }
+        return instance;
     }
 
+    @Override
+    public IDatabaseConnection openConnection(Properties properties) throws SQLException, ClassNotFoundException {
+        if (connection == null || connection.isClosed()) { // db verbindung aufbauen, wenn keine offen ist
+            Class.forName("org.mariadb.jdbc.Driver");
+            String url = properties.getProperty("db.url");
+            String username = properties.getProperty("db.username");
+            String password = properties.getProperty("db.password");
+
+            this.connection = DriverManager.getConnection(url, username, password);
+        }
+        return this;
+    }
 
     @Override
     public void createAllTables() throws SQLException {
         Statement stmt = connection.createStatement();
 
-        //Datenbank neu aufsetzen:
+        // db name geben
         String dbName = Constants.databaseName;
 
-        // prüfen ob die db schon exisitert
+        // prüfe, ob die db bereits existiert
         if (databaseExists(dbName)) {
-            System.out.println("Datenbank exisitert bereits, wird neu aufgesetzt...");
+            System.out.println("Datenbank existiert bereits, wird neu aufgesetzt...");
             stmt.executeUpdate("DROP DATABASE " + dbName);
         }
-        //stmt.executeUpdate("DROP DATABASE " + api.database.Constants.databaseName);
-        System.out.println("Datenbank " + Constants.databaseName + " erstellen...");
+
+        System.out.println("Datenbank " + Constants.databaseName + " wird erstellt...");
         stmt.executeUpdate("CREATE DATABASE " + Constants.databaseName);
         stmt.executeUpdate("USE " + Constants.databaseName);
-
-
 
         String sqlV1 = readSQLFromFile("/databasemigrations/V1__kunden-schema.sql");
         String sqlV2 = readSQLFromFile("/databasemigrations/V2__reading-schema.sql");
 
-        System.out.println("Tabellen erstellen...");//\n " + sqlV1 + " & \n" +sqlV2);
-
+        System.out.println("Tabellen werden erstellt...");
         stmt.executeUpdate(sqlV1);
         stmt.executeUpdate(sqlV2);
     }
 
     @Override
     public void truncateAllTables() throws SQLException {
-
+        // TODO: Implementieren
     }
 
     @Override
     public void removeAllTables() throws SQLException {
-
+        // TODO: Implementieren
     }
 
     @Override
     public void closeConnection() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();
+            connection = null; // Verbindung auf null setzen ->damit sie neu aufgebaut werden kann
         }
     }
 
@@ -76,7 +83,6 @@ public class DatabaseConnection implements IDatabaseConnection {
         if (inputStream == null) {
             throw new RuntimeException("Datei nicht gefunden, Pfad überprüfen!: " + resourcePath);
         }
-        // Datei in einen String umwandeln
         return new BufferedReader(new InputStreamReader(inputStream))
                 .lines()
                 .collect(Collectors.joining("\n"));
@@ -89,5 +95,10 @@ public class DatabaseConnection implements IDatabaseConnection {
         rs.close();
         stmt.close();
         return exists;
+    }
+
+    // Getter für die Connection (für Tests notwendig)
+    public Connection getConnection() {
+        return connection;
     }
 }
