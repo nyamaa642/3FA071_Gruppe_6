@@ -1,2 +1,0 @@
-dbUrl;dbUser;dbPw
-jdbc:mariadb://127.0.0.1:3306/;root;12345
