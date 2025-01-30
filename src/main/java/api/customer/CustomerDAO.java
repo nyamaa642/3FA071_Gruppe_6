@@ -5,12 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import api.database.Constants;
+import api.database.DatabaseConnection;
+
+import api.database.IDatabaseConnection;
+
+
 public class CustomerDAO {
 
+    DatabaseConnection dbconn = new DatabaseConnection();
+
     Connection getConnection() throws SQLException {
-        String url = "jdbc:mariadb://127.0.0.1:3306/";
-        String username = "root";
-        String password = "12345";
+        String url = Constants.databaseUrl;
+        String username = Constants.username;
+        String password = Constants.password;
         return DriverManager.getConnection(url, username, password);
     }
 
