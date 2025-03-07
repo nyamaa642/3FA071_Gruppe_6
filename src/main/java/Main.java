@@ -1,15 +1,9 @@
-
-
-import api.database.DatabaseConfig;
+import api.Server;
+import api.database.Constants;
 import api.database.DatabaseConnection;
 import api.database.IDatabaseConnection;
-import de.BSINFO3FA071G6.constants.Constants;
-//import api.database.DatabaseConnection;
-//import api.database.IDatabaseConnection;
-//
-//import de.BSINFO3FA071G6.constants.Constants;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.Properties;
 //import java.util.Properties;
 
@@ -19,7 +13,8 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-
+        Server server = new Server();
+        server.startServer();
         new Main().doit();
     }
 
