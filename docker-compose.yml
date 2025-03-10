@@ -6,8 +6,8 @@ services:
     container_name: mariadb-test
     environment:
       MARIADB_DATABASE: test
-      MARIADB_USER: root
-      MARIADB_PASSWORD: 12345
+#      MARIADB_USER: root
+#      MARIADB_PASSWORD: 12345
       MARIADB_ROOT_PASSWORD: 12345
     ports:
       - "3306:3306"
