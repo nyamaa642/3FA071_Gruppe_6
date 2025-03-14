@@ -2,7 +2,9 @@ package api.customer;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,39 +12,57 @@ import java.util.UUID;
 @Path("/customers")
 public class CustomerResource {
 
+    private static CustomerDAO customerDAO;
+
     private static List<Customer> customers = new ArrayList<>();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Customer> getCustomers(){
-        return customers;
+    public Response getCustomer(@PathParam("id") UUID id) throws SQLException {
+        Customer customer = customerDAO.getCustomerById(id);
+        return Response.status(Response.Status.OK)
+                .entity(customer)
+                .build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Customer createCustomer(Customer customer) {
-        customers.add(customer);
-        return customer;
+    public Response createCustomer() throws SQLException {
+        Customer customer = new Customer();
+        customerDAO.addCustomer(customer);
+        return Response.status(Response.Status.CREATED)
+                .entity(customer)
+                .build();
     }
 
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Customer updateCustomer(@PathParam("id") UUID id, Customer customer) {
-        for (int i = 0; i < customers.size(); i++) {
-            if (customers.get(i).getId() == id) {
-                customers.set(i, customer);
-                return customer;
-            }
+    public Response updateCustomer(@PathParam("id") UUID id, Customer updatedCustomer) throws SQLException {
+        Customer existingCustomer = customerDAO.getCustomerById(id);
+        if (existingCustomer == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        throw new NotFoundException("Customer with ID " + id + " not found.");
+        existingCustomer.setLastName(updatedCustomer.getFirstName());
+        existingCustomer.setFirstName(updatedCustomer.getLastName());
+        existingCustomer.setBirthDate(updatedCustomer.getBirthDate());
+        customerDAO.updateCustomer(existingCustomer);
+        return Response.status(Response.Status.OK)
+                .entity(updatedCustomer)
+                .build();
+
     }
 
     @DELETE
     @Path("/{id}")
-    public void deleteCustomer(@PathParam("id") UUID id) {
-        customers.removeIf(customer -> customer.getId() == id);
+    public Response deleteCustomer(@PathParam("id") UUID id) throws SQLException {
+        Customer existingCustomer = customerDAO.getCustomerById(id);
+        if (existingCustomer == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        customerDAO.deleteCustomer(id);
+        return Response.noContent().build();
     }
 }
