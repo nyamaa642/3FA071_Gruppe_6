@@ -1,7 +1,7 @@
 package api.reading;
 
 public enum TypeOfMeter {
-    HEATING,
+    GAS,
     WATER,
     ELECTRICITY
 }
