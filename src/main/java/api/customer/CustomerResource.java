@@ -14,8 +14,6 @@ public class CustomerResource {
 
     private static CustomerDAO customerDAO;
 
-    private static List<Customer> customers = new ArrayList<>();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCustomer(@PathParam("id") UUID id) throws SQLException {
