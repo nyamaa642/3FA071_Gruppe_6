@@ -5,6 +5,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 @Path("/readings")
@@ -14,10 +15,19 @@ public class ReadingResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getReading(@PathParam("id") UUID id) throws SQLException {
+    public Response getReadingById(@PathParam("id") UUID id) throws SQLException {
         Reading reading = readingDAO.getReadingById(id);
         return Response.status(Response.Status.OK)
                 .entity(reading)
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllReading() throws SQLException {
+        List<Reading> readings = readingDAO.getAllReadings();
+        return Response.status(Response.Status.OK)
+                .entity(readings)
                 .build();
     }
 

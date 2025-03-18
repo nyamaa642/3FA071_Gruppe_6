@@ -16,10 +16,19 @@ public class CustomerResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCustomer(@PathParam("id") UUID id) throws SQLException {
+    public Response getCustomerById(@PathParam("id") UUID id) throws SQLException {
         Customer customer = customerDAO.getCustomerById(id);
         return Response.status(Response.Status.OK)
                 .entity(customer)
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public  Response getAllCustomer() throws SQLException {
+        List<Customer> customers = customerDAO.getAllCustomers();
+        return Response.status(Response.Status.OK)
+                .entity(customers)
                 .build();
     }
 
