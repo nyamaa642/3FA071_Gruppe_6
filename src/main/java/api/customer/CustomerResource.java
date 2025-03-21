@@ -15,6 +15,8 @@ public class CustomerResource {
     private static CustomerDAO customerDAO;
 
     @GET
+    @Path("/{id : [0-9a-fA-F\\-]{36}}")
+
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCustomerById(@PathParam("id") UUID id) throws SQLException {
         Customer customer = customerDAO.getCustomerById(id);
@@ -22,6 +24,7 @@ public class CustomerResource {
                 .entity(customer)
                 .build();
     }
+
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

@@ -10,9 +10,9 @@ import java.util.UUID;
 
 @Path("/readings")
 public class ReadingResource {
-    
+
     ReadingDAO readingDAO = new ReadingDAO();
-    
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReadingById(@PathParam("id") UUID id) throws SQLException {
@@ -23,6 +23,7 @@ public class ReadingResource {
     }
 
     @GET
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllReading() throws SQLException {
         List<Reading> readings = readingDAO.getAllReadings();
