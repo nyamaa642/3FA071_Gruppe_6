@@ -13,8 +13,6 @@ import api.database.IDatabaseConnection;
 
 public class CustomerDAO {
 
-    DatabaseConnection dbconn = new DatabaseConnection();
-
     Connection getConnection() throws SQLException {
         String url = Constants.databaseUrl;
         String username = Constants.username;
@@ -25,10 +23,11 @@ public class CustomerDAO {
 
     // Create Customer
     public void addCustomer(Customer customer) throws SQLException {
-        String sql = "INSERT INTO customers (id, firstname, lastname, birthDate) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Customer (id, first_name, last_name, birth_date) VALUES (?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
-            customer.setId(UUID.randomUUID());
+            UUID id = UUID.randomUUID();
+            customer.setId(id);
             statement.setString(1, customer.getId().toString());
             statement.setString(2, customer.getFirstName());
             statement.setString(3, customer.getLastName());
@@ -39,7 +38,7 @@ public class CustomerDAO {
 
     // Read all Customers
     public List<Customer> getAllCustomers() throws SQLException {
-        String sql = "SELECT * FROM customers";
+        String sql = "SELECT * FROM Customer";
         List<Customer> customers = new ArrayList<>();
 
         try (Connection connection = getConnection();
@@ -48,9 +47,9 @@ public class CustomerDAO {
             while (resultSet.next()) {
                 Customer customer = new Customer();
                 customer.setId(UUID.fromString(resultSet.getString("id")));
-                customer.setFirstName(resultSet.getString("firstname"));
-                customer.setLastName(resultSet.getString("lastname"));
-                customer.setBirthDate(resultSet.getDate("birthDate").toLocalDate());
+                customer.setFirstName(resultSet.getString("first_name"));
+                customer.setLastName(resultSet.getString("last_name"));
+                customer.setBirthDate(resultSet.getDate("birth_date").toLocalDate());
                 customers.add(customer);
             }
         }
@@ -59,7 +58,7 @@ public class CustomerDAO {
 
     // Read Customer by ID
     public Customer getCustomerById(UUID id) throws SQLException {
-        String sql = "SELECT * FROM customers WHERE id = ?";
+        String sql = "SELECT * FROM Customer WHERE id = ?";
         Customer customer = null;
 
         try (Connection connection = getConnection();
@@ -69,9 +68,9 @@ public class CustomerDAO {
                 if (resultSet.next()) {
                     customer = new Customer();
                     customer.setId(UUID.fromString(resultSet.getString("id")));
-                    customer.setFirstName(resultSet.getString("firstname"));
-                    customer.setLastName(resultSet.getString("lastname"));
-                    customer.setBirthDate(resultSet.getDate("birthDate").toLocalDate());
+                    customer.setFirstName(resultSet.getString("first_name"));
+                    customer.setLastName(resultSet.getString("last_name"));
+                    customer.setBirthDate(resultSet.getDate("birth_date").toLocalDate());
                 }
             }
         }
@@ -80,7 +79,7 @@ public class CustomerDAO {
 
     // Update Customer
     public boolean updateCustomer(Customer customer) throws SQLException {
-        String sql = "UPDATE customers SET firstname = ?, lastname = ?, birthDate = ? WHERE id = ?";
+        String sql = "UPDATE Customer SET first_name = ?, last_name = ?, birth_date = ? WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, customer.getFirstName());
@@ -94,7 +93,7 @@ public class CustomerDAO {
 
     // Delete Customer
     public boolean deleteCustomer(UUID id) throws SQLException {
-        String sql = "DELETE FROM customers WHERE id = ?";
+        String sql = "DELETE FROM Customer WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, id.toString());
