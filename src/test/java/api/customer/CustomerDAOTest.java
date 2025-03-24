@@ -21,11 +21,13 @@ public class CustomerDAOTest {
 
     @Test
     public void testAddCustomer() throws SQLException {
-        UUID id;
-        Customer customer = new Customer(id = UUID.randomUUID(), "John", "Doe", LocalDate.of(1980, 1, 1));
+        Customer customer = new Customer();
+        customer.setFirstName("John");
+        customer.setLastName("Doe");
+        customer.setBirthDate(LocalDate.of(2002,2,2));
         customerDAO.addCustomer(customer);
 
-        Customer retrievedCustomer = customerDAO.getCustomerById(id);
+        Customer retrievedCustomer = customerDAO.getCustomerById(customer.getId());
 
         assertEquals(customer.getId(), retrievedCustomer.getId());
         assertEquals(customer.getFirstName(), retrievedCustomer.getFirstName());
