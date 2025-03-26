@@ -12,7 +12,7 @@ public class Customer {
     private LocalDate birthDate;
 
     public Customer(UUID id, String lastName, String firstName, LocalDate birthDate) {
-        this.id = id;
+        this.id = UUID.randomUUID();
         this.lastName = lastName;
         this.firstName = firstName;
         this.birthDate = birthDate;

@@ -5,18 +5,16 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Path("/customers")
 public class CustomerResource {
 
-    private static CustomerDAO customerDAO;
+    private CustomerDAO customerDAO = new CustomerDAO();
 
     @GET
-    @Path("/{id : [0-9a-fA-F\\-]{36}}")
-
+    @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCustomerById(@PathParam("id") UUID id) throws SQLException {
         Customer customer = customerDAO.getCustomerById(id);
@@ -38,8 +36,7 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createCustomer() throws SQLException {
-        Customer customer = new Customer();
+    public Response createCustomer(Customer customer) throws SQLException {
         customerDAO.addCustomer(customer);
         return Response.status(Response.Status.CREATED)
                 .entity(customer)

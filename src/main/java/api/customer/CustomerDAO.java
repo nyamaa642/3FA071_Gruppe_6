@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import api.database.Constants;
-import api.database.DatabaseConnection;
-
-import api.database.IDatabaseConnection;
 
 
 public class CustomerDAO {
