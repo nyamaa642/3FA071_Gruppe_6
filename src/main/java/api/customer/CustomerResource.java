@@ -55,6 +55,7 @@ public class CustomerResource {
         existingCustomer.setLastName(updatedCustomer.getFirstName());
         existingCustomer.setFirstName(updatedCustomer.getLastName());
         existingCustomer.setBirthDate(updatedCustomer.getBirthDate());
+        existingCustomer.setGender(updatedCustomer.getGender());
         customerDAO.updateCustomer(existingCustomer);
         return Response.status(Response.Status.OK)
                 .entity(updatedCustomer)

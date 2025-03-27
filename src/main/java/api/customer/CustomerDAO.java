@@ -20,7 +20,7 @@ public class CustomerDAO {
 
     // Create Customer
     public void addCustomer(Customer customer) throws SQLException {
-        String sql = "INSERT INTO Customer (id, first_name, last_name, birth_date) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Customer (id, first_name, last_name, birth_date, gender) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             UUID id = UUID.randomUUID();
@@ -29,6 +29,7 @@ public class CustomerDAO {
             statement.setString(2, customer.getFirstName());
             statement.setString(3, customer.getLastName());
             statement.setDate(4, Date.valueOf(customer.getBirthDate()));
+            statement.setString(5, String.valueOf(customer.getGender()));
             statement.executeUpdate();
         }
     }
@@ -47,6 +48,7 @@ public class CustomerDAO {
                 customer.setFirstName(resultSet.getString("first_name"));
                 customer.setLastName(resultSet.getString("last_name"));
                 customer.setBirthDate(resultSet.getDate("birth_date").toLocalDate());
+                customer.setGender(Gender.valueOf(resultSet.getString("gender")));
                 customers.add(customer);
             }
         }
@@ -68,6 +70,7 @@ public class CustomerDAO {
                     customer.setFirstName(resultSet.getString("first_name"));
                     customer.setLastName(resultSet.getString("last_name"));
                     customer.setBirthDate(resultSet.getDate("birth_date").toLocalDate());
+                    customer.setGender(Gender.valueOf(resultSet.getString("gender")));
                 }
             }
         }
@@ -76,13 +79,14 @@ public class CustomerDAO {
 
     // Update Customer
     public boolean updateCustomer(Customer customer) throws SQLException {
-        String sql = "UPDATE Customer SET first_name = ?, last_name = ?, birth_date = ? WHERE id = ?";
+        String sql = "UPDATE Customer SET first_name = ?, last_name = ?, birth_date = ?, gender = ? WHERE id = ?";
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, customer.getFirstName());
             statement.setString(2, customer.getLastName());
             statement.setDate(3, Date.valueOf(customer.getBirthDate()));
             statement.setString(4, customer.getId().toString());
+            statement.setString(5, String.valueOf(customer.getGender()));
             statement.executeUpdate();
         }
         return false;
