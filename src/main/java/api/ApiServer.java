@@ -6,7 +6,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 
 import java.net.URI;
 
-public class Server {
+public class ApiServer {
 
     private HttpServer server;
 
@@ -18,7 +18,7 @@ public class Server {
             config.packages(pack);
             server = GrizzlyHttpServerFactory.createHttpServer(URI.create(url), config);
             server.start();
-            System.out.println("Server started at: " + url);
+            System.out.println("ApiServer started at: " + url);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,7 +30,7 @@ public class Server {
         if (server != null) {
             try {
                 server.stop();
-                System.out.println("Server stopped.");
+                System.out.println("ApiServer stopped.");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.err.println("Error stopping the server.");

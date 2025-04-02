@@ -1,4 +1,5 @@
-import api.Server;
+package api;
+
 import api.database.Constants;
 import api.database.DatabaseConnection;
 import api.database.IDatabaseConnection;
@@ -13,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
-        Server server = new Server();
+        ApiServer server = new ApiServer();
         server.startServer();
         new Main().doit();
     }
