@@ -31,11 +31,17 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Jersey Grizzly HTTP Server -->
+        <!-- Jersey Grizzly HTTP ApiServer -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-grizzly2-http</artifactId>
             <version>3.1.10</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.grizzly</groupId>
+            <artifactId>grizzly-servlet-webcontext</artifactId>
+            <version>2.4.4</version>
         </dependency>
 
         <dependency>
@@ -74,6 +80,19 @@
             <version>2.18.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-bom</artifactId>
+            <version>23.5.15</version>
+            <scope>import</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring-boot-starter</artifactId>
+            <version>23.5.15</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -92,6 +111,21 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.vaadin</groupId>
+                <artifactId>vaadin-maven-plugin</artifactId>
+                <version>23.5.15</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-frontend</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nodeAutoUpdate>true</nodeAutoUpdate>
                 </configuration>
             </plugin>
         </plugins>
