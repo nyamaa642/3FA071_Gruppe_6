@@ -23,7 +23,7 @@ public class ReadingDAOTest {
         // Datenbank für Tests zurücksetzen
         try (Connection connection = readingDAO.getConnection();
              Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate("DELETE FROM readings");
+            stmt.executeUpdate("DELETE FROM Reading");
         }
     }
 

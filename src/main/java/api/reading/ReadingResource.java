@@ -35,8 +35,7 @@ public class ReadingResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createReading() throws SQLException {
-        Reading reading = new Reading();
+    public Response createReading(Reading reading) throws SQLException {
         readingDAO.addReading(reading);
         return Response.status(Response.Status.CREATED)
                 .entity(reading)
