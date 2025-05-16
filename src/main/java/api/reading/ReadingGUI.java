@@ -216,12 +216,4 @@ public class ReadingGUI extends JFrame {
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            ReadingGUI gui = new ReadingGUI();
-            gui.setLocationRelativeTo(null);
-            gui.setVisible(true);
-        });
-    }
 }

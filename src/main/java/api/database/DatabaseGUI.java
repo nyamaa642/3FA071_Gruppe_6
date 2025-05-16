@@ -157,12 +157,4 @@ public class DatabaseGUI extends JFrame {
     private void logError(String message) {
         logArea.append("[ERROR] " + message + "\n");
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            DatabaseGUI gui = new DatabaseGUI();
-            gui.setLocationRelativeTo(null);
-            gui.setVisible(true);
-        });
-    }
 }
